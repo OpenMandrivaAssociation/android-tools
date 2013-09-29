@@ -8,7 +8,7 @@
 
 Name:          android-tools
 Version:       %{date}git%{git_commit}
-Release:       2
+Release:       3
 Summary:       Android platform tools(adb, fastboot)
 
 Group:         Development/Other
@@ -86,10 +86,10 @@ mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
 install -p -D -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/udev/rules.d/
 
 %post
-%_post_service adb.service
+%_post_service adb
 
 %preun
-%_preun_service adb.service
+%_preun_service adb
 
 %files
 %doc adb/OVERVIEW.TXT adb/SERVICES.TXT adb/NOTICE adb/protocol.txt
