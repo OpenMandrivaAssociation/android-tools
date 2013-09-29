@@ -8,7 +8,7 @@
 
 Name:          android-tools
 Version:       %{date}git%{git_commit}
-Release:       1
+Release:       2
 Summary:       Android platform tools(adb, fastboot)
 
 Group:         Development/Other
@@ -65,7 +65,7 @@ setup between the host and the target phone as adb.
 cp -p %{SOURCE2} Makefile
 cp -p %{SOURCE3} adb/Makefile
 cp -p %{SOURCE4} fastboot/Makefile
-cp -p %{SOURCE5} 51-android.rules
+#cp -p %{SOURCE5} 51-android.rules
 
 %build
 # Avoid libselinux dependency.
@@ -78,9 +78,12 @@ sed -e '160,174d;434,455d' -i ../extras/ext4_utils/make_ext4fs.c
 
 %install
 install -d -m 0755 %{buildroot}%{_bindir}
-make install DESTDIR=$RPM_BUILD_ROOT BINDIR=%{_bindir}
+make install DESTDIR=%{buildroot} BINDIR=%{_bindir}
 install -p -D -m 0644 %{SOURCE6} \
     %{buildroot}%{_unitdir}/adb.service
+
+mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
+install -p -D -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/udev/rules.d/
 
 %post
 %_post_service adb.service
@@ -89,7 +92,8 @@ install -p -D -m 0644 %{SOURCE6} \
 %_preun_service adb.service
 
 %files
-%doc adb/OVERVIEW.TXT adb/SERVICES.TXT adb/NOTICE adb/protocol.txt 51-android.rules
+%doc adb/OVERVIEW.TXT adb/SERVICES.TXT adb/NOTICE adb/protocol.txt
+%{_sysconfdir}/udev/rules.d/51-android.rules
 %{_unitdir}/adb.service
 #ASL2.0
 %{_bindir}/adb
