@@ -1,0 +1,143 @@
+# Place this file into /etc/udev/rules.d/ if you want to autostart adb.service on plug
+#
+# http://developer.android.com/guide/developing/device.html
+# adb/usb_vendors.c
+
+# Acer
+SUBSYSTEM=="usb", ATTR{idVendor}=="0502", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Dell
+SUBSYSTEM=="usb", ATTR{idVendor}=="413c", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Foxconn
+SUBSYSTEM=="usb", ATTR{idVendor}=="0489", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Garmin-Asus
+SUBSYSTEM=="usb", ATTR{idVendor}=="091E", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Google
+SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# HTC
+SUBSYSTEM=="usb", ATTR{idVendor}=="0bb4", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Huawei
+SUBSYSTEM=="usb", ATTR{idVendor}=="12d1", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Kyocera
+SUBSYSTEM=="usb", ATTR{idVendor}=="0482", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# LG
+SUBSYSTEM=="usb", ATTR{idVendor}=="1004", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Motorola
+SUBSYSTEM=="usb", ATTR{idVendor}=="22b8", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Nvidia
+SUBSYSTEM=="usb", ATTR{idVendor}=="0955", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Pantech
+SUBSYSTEM=="usb", ATTR{idVendor}=="10A9", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Samsung
+SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Sharp
+SUBSYSTEM=="usb", ATTR{idVendor}=="04dd", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Sony Ericsson
+SUBSYSTEM=="usb", ATTR{idVendor}=="0fce", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# ZTE
+SUBSYSTEM=="usb", ATTR{idVendor}=="19d2", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Qualcomm
+SUBSYSTEM=="usb", ATTR{idVendor}=="05c6", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# On-The-Go-Video
+SUBSYSTEM=="usb", ATTR{idVendor}=="2257", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# NEC
+SUBSYSTEM=="usb", ATTR{idVendor}=="0409", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Panasonic
+SUBSYSTEM=="usb", ATTR{idVendor}=="04da", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Toshiba
+SUBSYSTEM=="usb", ATTR{idVendor}=="0930", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# SK Telesys
+SUBSYSTEM=="usb", ATTR{idVendor}=="1f53", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# KT Tech
+SUBSYSTEM=="usb", ATTR{idVendor}=="2116", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# ASUS
+SUBSYSTEM=="usb", ATTR{idVendor}=="0b05", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Philips
+SUBSYSTEM=="usb", ATTR{idVendor}=="0471", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Texas Instruments
+SUBSYSTEM=="usb", ATTR{idVendor}=="0451", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Funai
+SUBSYSTEM=="usb", ATTR{idVendor}=="0f1c", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Gigabyte
+SUBSYSTEM=="usb", ATTR{idVendor}=="0414", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# IRiver
+SUBSYSTEM=="usb", ATTR{idVendor}=="2420", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Compal
+SUBSYSTEM=="usb", ATTR{idVendor}=="1219", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# T & A Mobile Phones
+SUBSYSTEM=="usb", ATTR{idVendor}=="1bbb", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# LenovoMobile
+SUBSYSTEM=="usb", ATTR{idVendor}=="2006", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Lenovo
+SUBSYSTEM=="usb", ATTR{idVendor}=="17ef", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Vizio
+SUBSYSTEM=="usb", ATTR{idVendor}=="e040", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# K-Touch
+SUBSYSTEM=="usb", ATTR{idVendor}=="24e3", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Pegatron
+SUBSYSTEM=="usb", ATTR{idVendor}=="1d4d", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Archos
+SUBSYSTEM=="usb", ATTR{idVendor}=="0e79", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Positivo
+SUBSYSTEM=="usb", ATTR{idVendor}=="1662", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Intel
+SUBSYSTEM=="usb", ATTR{idVendor}=="8087", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Quanta
+SUBSYSTEM=="usb", ATTR{idVendor}=="0408", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# INQ Mobile
+SUBSYSTEM=="usb", ATTR{idVendor}=="2314", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Sony
+SUBSYSTEM=="usb", ATTR{idVendor}=="054c", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Lab126
+SUBSYSTEM=="usb", ATTR{idVendor}=="1949", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Yulong Coolpad
+SUBSYSTEM=="usb", ATTR{idVendor}=="1ebf", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Kobo
+SUBSYSTEM=="usb", ATTR{idVendor}=="2237", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
+# Teleepoch
+SUBSYSTEM=="usb", ATTR{idVendor}=="2340", TAG+="systemd", ENV{SYSTEMD_WANTS}="adb.service"
+
