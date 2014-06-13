@@ -8,7 +8,7 @@
 
 Name:          android-tools
 Version:       %{date}git%{git_commit}
-Release:       7
+Release:       8
 Summary:       Android platform tools(adb, fastboot)
 
 Group:         Development/Other
