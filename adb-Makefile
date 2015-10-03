@@ -13,10 +13,8 @@ SRCS+= transport_local.c
 SRCS+= transport_usb.c
 SRCS+= usb_linux.c
 SRCS+= usb_vendors.c
-SRCS+= utils.c
 
 VPATH+= ../libcutils
-SRCS+= abort_socket.c
 SRCS+= socket_inaddr_any_server.c
 SRCS+= socket_local_client.c
 SRCS+= socket_local_server.c
@@ -24,7 +22,6 @@ SRCS+= socket_loopback_client.c
 SRCS+= socket_loopback_server.c
 SRCS+= socket_network_client.c
 SRCS+= load_file.c
-SRCS+= list.c
 
 VPATH+= ../libzipfile
 SRCS+= centraldir.c
@@ -32,9 +29,11 @@ SRCS+= zipfile.c
 
 VPATH+= ../libmincrypt
 SRCS+= rsa.c
-SRCS+= rsa_e_3.c
-SRCS+= rsa_e_f4.c
+SRCS+= sha256.c
 SRCS+= sha.c
+SRCS+= p256.c
+SRCS+= p256_ec.c
+SRCS+= p256_ecdsa.c
 
 CPPFLAGS+= -DADB_HOST=1
 CPPFLAGS+= -DHAVE_FORKEXEC=1
@@ -42,11 +41,14 @@ CPPFLAGS+= -DHAVE_SYMLINKS
 CPPFLAGS+= -DHAVE_TERMIO_H
 CPPFLAGS+= -D_GNU_SOURCE
 CPPFLAGS+= -D_XOPEN_SOURCE
+CPPFLAGS+= -D_FILE_OFFSET_BITS=64
+CPPFLAGS+= -DHAVE_OFF64_T
 CPPFLAGS+= -I.
 CPPFLAGS+= -I../include
 
 CFLAGS+= $(RPM_OPT_FLAGS)
 LIBS= -lrt -lpthread -lz -lcrypto
+LDFLAGS+= $(RPM_LD_FLAGS)
 
 CC= $(TOOLCHAIN)gcc
 LD= $(TOOLCHAIN)gcc

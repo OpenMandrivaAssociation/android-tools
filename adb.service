@@ -8,6 +8,7 @@ Type=forking
 ExecStart=/usr/bin/adb start-server
 ExecStop=/usr/bin/adb kill-server
 PrivateTmp=yes
+Environment=HOME=/var/lib/adb
 
 [Install]
 WantedBy=multi-user.target

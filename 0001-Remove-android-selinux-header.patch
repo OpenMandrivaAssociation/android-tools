@@ -1,0 +1,38 @@
+From 239a63ace3d94c44561580f7e4d0db3e95cd557f Mon Sep 17 00:00:00 2001
+From: Jonathan Dieter <jdieter@lesbg.com>
+Date: Fri, 26 Dec 2014 17:04:54 +0200
+Subject: [PATCH 1/2] Remove android selinux header
+
+Signed-off-by: Jonathan Dieter <jdieter@lesbg.com>
+---
+ ext4_utils/make_ext4fs.c  | 1 -
+ f2fs_utils/f2fs_ioutils.c | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/ext4_utils/make_ext4fs.c b/ext4_utils/make_ext4fs.c
+index 2f89ae8..732afbe 100644
+--- a/ext4_utils/make_ext4fs.c
++++ b/ext4_utils/make_ext4fs.c
+@@ -62,7 +62,6 @@
+ 
+ #include <selinux/selinux.h>
+ #include <selinux/label.h>
+-#include <selinux/android.h>
+ 
+ #define O_BINARY 0
+ 
+diff --git a/f2fs_utils/f2fs_ioutils.c b/f2fs_utils/f2fs_ioutils.c
+index 53b7b4b..2706d04 100644
+--- a/f2fs_utils/f2fs_ioutils.c
++++ b/f2fs_utils/f2fs_ioutils.c
+@@ -78,7 +78,6 @@ struct selabel_handle;
+ 
+ #include <selinux/selinux.h>
+ #include <selinux/label.h>
+-#include <selinux/android.h>
+ 
+ #define O_BINARY 0
+ 
+-- 
+2.1.0
+
