@@ -12,6 +12,7 @@ Group: Development/Tools
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(libcrypto)
 BuildRequires: selinux-static-devel
+BuildRequires: gtest-devel
 Patch0: adb-clang-4.0.patch
 Patch1: libbase-clang-4.0.patch
 Patch2: adb-openssl-1.1.patch
