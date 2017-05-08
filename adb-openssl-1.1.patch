@@ -1,0 +1,29 @@
+--- platform/system/core/adb/adb_auth_host.cpp.omv~	2017-05-07 23:25:44.786707582 +0200
++++ platform/system/core/adb/adb_auth_host.cpp	2017-05-07 23:29:35.356768633 +0200
+@@ -71,14 +71,16 @@ static int RSA_to_RSAPublicKey(RSA *rsa,
+     BIGNUM* rem = BN_new();
+     BIGNUM* n = BN_new();
+     BIGNUM* n0inv = BN_new();
++    const BIGNUM* rsan, *rsae, *rsad;
+ 
+     if (RSA_size(rsa) != RSANUMBYTES) {
+         ret = 0;
+         goto out;
+     }
+ 
++    RSA_get0_key(rsa, &rsan, &rsae, &rsad);
+     BN_set_bit(r32, 32);
+-    BN_copy(n, rsa->n);
++    BN_copy(n, rsan);
+     BN_set_bit(r, RSANUMWORDS * 32);
+     BN_mod_sqr(rr, r, n, ctx);
+     BN_div(NULL, rem, n, r32, ctx);
+@@ -92,7 +94,7 @@ static int RSA_to_RSAPublicKey(RSA *rsa,
+         BN_div(n, rem, n, r32, ctx);
+         pkey->n[i] = BN_get_word(rem);
+     }
+-    pkey->exponent = BN_get_word(rsa->e);
++    pkey->exponent = BN_get_word(rsae);
+ 
+ out:
+     BN_free(n0inv);
