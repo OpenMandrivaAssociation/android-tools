@@ -96,7 +96,7 @@ done
 ar cru libext4_utils.a $(ls *.o |grep -v ext2simg.o)
 ranlib libext4_utils.a
 %{__cc} %{optflags} -DANDROID -DHOST -o ext2simg ext2simg.o -I../../core/libsparse/include $(pkg-config --libs zlib) ../../core/libsparse/libsparse.a libext4_utils.a
-%{__cc} %{optflags} -DANDROID -DHOST -o make_ext4fs make_ext4fs_main.c libext4_utils.a -I../../core/libsparse/include -I../../core/include $(pkg-config --libs libselinux) $(pkg-config --libs zlib) ../../core/libsparse/libsparse.a ../../core/libcutils/libcutils.a ../../core/liblog/liblog.a
+%{__cc} %{optflags} -DANDROID -DHOST -o make_ext4fs make_ext4fs_main.c libext4_utils.a -I../../core/libsparse/include -I../../core/include $(pkg-config --libs libselinux) $(pkg-config --libs zlib) ../../core/libsparse/libsparse.a ../../core/libcutils/libcutils.a ../../core/liblog/liblog.a -lpthread
 
 cd ../../core/adb
 for i in adb adb_auth adb_auth_host adb_io adb_listeners adb_trace adb_utils fdevent sockets transport transport_local transport_usb get_my_path_linux sysdeps_unix usb_linux adb_client bugreport client/main console commandline diagnose_usb file_sync_client line_printer services shell_service_protocol; do
