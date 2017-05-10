@@ -1,4 +1,5 @@
 Name: android-tools
+Epoch: 1
 Version: 7.1.2_r11
 Release: 1
 # https://android.googlesource.com/platform/system/core
