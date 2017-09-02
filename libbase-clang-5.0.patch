@@ -1,0 +1,30 @@
+--- platform/system/core/base/file.cpp.omv~	2017-09-02 01:19:53.407639119 +0200
++++ platform/system/core/base/file.cpp	2017-09-02 01:20:25.597545185 +0200
+@@ -26,6 +26,7 @@
+ #include <memory>
+ #include <mutex>
+ #include <string>
++#include <cstring>
+ #include <vector>
+ 
+ #include "android-base/macros.h"  // For TEMP_FAILURE_RETRY on Darwin.
+--- platform/system/core/base/logging.cpp.omv~	2017-09-02 02:34:22.427701988 +0200
++++ platform/system/core/base/logging.cpp	2017-09-02 02:34:39.174626142 +0200
+@@ -40,6 +40,7 @@
+ #include <mutex>
+ #include <sstream>
+ #include <string>
++#include <cstring>
+ #include <utility>
+ #include <vector>
+ 
+--- platform/system/core/base/errors_unix.cpp.omv~	2017-09-02 02:52:21.606767674 +0200
++++ platform/system/core/base/errors_unix.cpp	2017-09-02 02:52:33.043731261 +0200
+@@ -17,6 +17,7 @@
+ #include "android-base/errors.h"
+ 
+ #include <errno.h>
++#include <cstring>
+ 
+ namespace android {
+ namespace base {

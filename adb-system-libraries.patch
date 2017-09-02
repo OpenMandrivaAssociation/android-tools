@@ -1,0 +1,13 @@
+--- platform/system/core/adb/client/usb_libusb.cpp.omv~	2017-09-02 03:11:35.757044079 +0200
++++ platform/system/core/adb/client/usb_libusb.cpp	2017-09-02 03:13:39.321604474 +0200
+@@ -27,8 +27,9 @@
+ #include <string>
+ #include <thread>
+ #include <unordered_map>
++#include <condition_variable>
+ 
+-#include <libusb/libusb.h>
++#include <libusb-1.0/libusb.h>
+ 
+ #include <android-base/file.h>
+ #include <android-base/logging.h>
