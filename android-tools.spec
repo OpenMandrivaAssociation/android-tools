@@ -10,6 +10,7 @@ Summary: Tools for working with/on Android
 URL: http://android.googlesource.com/
 License: Apache 2.0
 Group: Development/Tools
+BuildRequires: pkgconfig(libusb-1.0)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(libcrypto)
 BuildRequires: selinux-static-devel
