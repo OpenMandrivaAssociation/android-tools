@@ -1,7 +1,7 @@
 Name: android-tools
 Epoch: 1
 Version: 8.0.0_r4
-Release: 1
+Release: 2
 # https://android.googlesource.com/platform/system/core
 Source0: core-%{version}.tar.xz
 # https://android.googlesource.com/platform/system/extras
@@ -19,6 +19,7 @@ Patch0: adb-system-libraries.patch
 Patch1: libbase-clang-5.0.patch
 Patch2: libcrypto_utils-openssl-1.1.patch
 Patch3: adb-system-openssl.patch
+Patch4: make_ext4fs-add-keep-uids-option.patch
 
 %description
 This package provides various tools for working with (and on) Android devices:

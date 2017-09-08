@@ -1,0 +1,73 @@
+--- platform/system/extras/ext4_utils/make_ext4fs.c.omv~	2017-09-09 01:10:36.173329286 +0200
++++ platform/system/extras/ext4_utils/make_ext4fs.c	2017-09-09 01:18:20.609985741 +0200
+@@ -90,6 +90,7 @@
+ const int blk_file_major_ver = 1;
+ const int blk_file_minor_ver = 0;
+ const char *blk_file_header_fmt = "Base EXT4 version %d.%d";
++int keep_uids = 0;
+ 
+ /* TODO: Not implemented:
+    Allocating blocks in the same block group as the file inode
+@@ -219,6 +220,10 @@ static u32 build_directory_structure(con
+ 		} else {
+ 			dentries[i].mtime = fixed_time;
+ 		}
++		if (keep_uids == 1) {
++			dentries[i].uid = stat.st_uid;
++			dentries[i].gid = stat.st_gid;
++		}
+ 		uint64_t capabilities;
+ 		if (fs_config_func != NULL) {
+ #ifdef ANDROID
+@@ -235,6 +240,10 @@ static u32 build_directory_structure(con
+ 			error("can't set android permissions - built without android support");
+ #endif
+ 		}
++		if (keep_uids > 1) {
++			dentries[i].uid = stat.st_uid;
++			dentries[i].gid = stat.st_gid;
++		}
+ #ifndef _WIN32
+ 		if (sehnd) {
+ 			if (selabel_lookup(sehnd, &dentries[i].secon, dentries[i].path, stat.st_mode) < 0) {
+--- platform/system/extras/ext4_utils/make_ext4fs_main.c.omv~	2017-09-09 01:13:48.924778749 +0200
++++ platform/system/extras/ext4_utils/make_ext4fs_main.c	2017-09-09 01:19:45.104736287 +0200
+@@ -48,6 +48,7 @@ struct selabel_handle;
+ #endif
+ 
+ extern struct fs_info info;
++extern int keep_uids;
+ 
+ 
+ static void usage(char *path)
+@@ -57,7 +58,7 @@ static void usage(char *path)
+ 	fprintf(stderr, "    [ -e <flash erase block size> ] [ -o <flash logical block size> ]\n");
+ 	fprintf(stderr, "    [ -L <label> ] [ -f ] [ -a <android mountpoint> ] [ -u ]\n");
+ 	fprintf(stderr, "    [ -S file_contexts ] [ -C fs_config ] [ -T timestamp ]\n");
+-	fprintf(stderr, "    [ -z | -s ] [ -w ] [ -c ] [ -J ] [ -v ] [ -B <block_list_file> ]\n");
++	fprintf(stderr, "    [ -z | -s ] [ -k | -K ] [ -w ] [ -c ] [ -J ] [ -v ] [ -B <block_list_file> ]\n");
+ 	fprintf(stderr, "    [ -d <base_alloc_file_in> ] [ -D <base_alloc_file_out> ]\n");
+ 	fprintf(stderr, "    <filename> [[<directory>] <target_out_directory>]\n");
+ }
+@@ -88,7 +89,7 @@ int main(int argc, char **argv)
+ 	struct selinux_opt seopts[] = { { SELABEL_OPT_PATH, "" } };
+ #endif
+ 
+-	while ((opt = getopt(argc, argv, "l:j:b:g:i:I:e:o:L:a:S:T:C:B:d:D:fwzJsctvu")) != -1) {
++	while ((opt = getopt(argc, argv, "l:j:b:g:i:I:e:o:L:a:S:T:C:B:d:D:fwzJsctvukK")) != -1) {
+ 		switch (opt) {
+ 		case 'l':
+ 			info.len = parse_num(optarg);
+@@ -190,6 +191,12 @@ int main(int argc, char **argv)
+ 				exit(EXIT_FAILURE);
+ 			}
+ 			break;
++		case 'k':
++			keep_uids = 1;
++			break;
++		case 'K':
++			keep_uids = 2;
++			break;
+ 		default: /* '?' */
+ 			usage(argv[0]);
+ 			exit(EXIT_FAILURE);
