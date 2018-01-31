@@ -1,3 +1,4 @@
 sources:
-  core-8.1.0_r1.tar.xz: b1401608a9d8a65002a6001eef8cd9b61d259be5
-  extras-8.1.0_r1.tar.xz: c16faca6aed390916bc150981e2e0a3c7d032eac
+  core-8.1.0_r9.tar.xz: 49f7954de95a7851b128dd25244c9f02919ebcec
+  extras-8.1.0_r9.tar.xz: f2aa2df06d8050c647ac72d7f294161faad2dac7
+  abootimg-20180131.tar.xz: 1f2935ea5a54221057b26ceb73195c68d9bdc288

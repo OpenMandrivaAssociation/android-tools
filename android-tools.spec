@@ -1,11 +1,16 @@
 Name: android-tools
 Epoch: 1
-Version: 8.1.0_r1
+Version: 8.1.0_r9
 Release: 1
 # https://android.googlesource.com/platform/system/core
 Source0: core-%{version}.tar.xz
 # https://android.googlesource.com/platform/system/extras
 Source1: extras-%{version}.tar.xz
+# Not officially supported, but very useful for working
+# with phones that don't have a full source tree release...
+# https://github.com/ggrandou/abootimg
+Source2: abootimg-20180131.tar.xz
+Source100: package-source.sh
 Summary: Tools for working with/on Android
 URL: http://android.googlesource.com/
 License: Apache 2.0
@@ -33,8 +38,9 @@ append2simg -- A tool to append to a sparse image
 make_ext4fs -- A tool to generate ext4 sparse images
 
 %prep
-%setup -qn platform -b 1
+%setup -qn platform -b 1 -b 2
 %apply_patches
+
 
 %build
 cd system/core/libsparse
@@ -126,6 +132,10 @@ for i in bootimg_utils engine fastboot fs protocol socket tcp udp util usb_linux
 done
 %{__cxx} -std=gnu++14 %{optflags} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -fvisibility=hidden -o fastboot -lz -lpthread *.o ../adb/diagnose_usb.o ../../extras/ext4_utils/libext4_utils.a ../libcutils/libcutils.a ../libsparse/libsparse.a ../libziparchive/libziparchive.a ../base/libbase.a ../libutils/libutils.a ../liblog/liblog.a
 
+pwd
+cd ../../../../abootimg
+make CFLAGS="%{optflags}" LDFLAGS="%{optflags}"
+
 %install
 mkdir -p %{buildroot}%{_bindir}
 install -c -m755 system/core/libsparse/simg2img %{buildroot}%{_bindir}/
@@ -136,6 +146,10 @@ install -c -m755 system/extras/ext4_utils/make_ext4fs %{buildroot}%{_bindir}/
 
 install -c -m755 system/core/adb/adb %{buildroot}%{_bindir}/
 install -c -m755 system/core/fastboot/fastboot %{buildroot}%{_bindir}/
+
+install -c -m755 ../abootimg/abootimg %{buildroot}%{_bindir}/
+install -c -m755 ../abootimg/abootimg-pack-initrd %{buildroot}%{_bindir}/
+install -c -m755 ../abootimg/abootimg-unpack-initrd %{buildroot}%{_bindir}/
 
 %files
 %{_bindir}/*
