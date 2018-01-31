@@ -18,6 +18,7 @@ Group: Development/Tools
 BuildRequires: pkgconfig(libusb-1.0)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(libcrypto)
+BuildRequires: pkgconfig(blkid)
 BuildRequires: selinux-static-devel
 BuildRequires: gtest-devel
 Patch0: adb-system-libraries.patch
