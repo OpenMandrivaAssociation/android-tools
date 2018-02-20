@@ -6,10 +6,12 @@ Release: 1
 Source0: core-%{version}.tar.xz
 # https://android.googlesource.com/platform/system/extras
 Source1: extras-%{version}.tar.xz
+# https://android.googlesource.com/platform/external/e2fsprogs
+Source2: e2fsprogs-%{version}.tar.xz
 # Not officially supported, but very useful for working
 # with phones that don't have a full source tree release...
 # https://github.com/ggrandou/abootimg
-Source2: abootimg-20180220.tar.xz
+Source3: abootimg-20180220.tar.xz
 Source100: package-source.sh
 Summary: Tools for working with/on Android
 URL: http://android.googlesource.com/
@@ -26,6 +28,9 @@ Patch1: libbase-clang-5.0.patch
 Patch2: libcrypto_utils-openssl-1.1.patch
 Patch3: adb-system-openssl.patch
 Patch4: make_ext4fs-add-keep-uids-option.patch
+# System mke2fs won't work because fastboot uses custom
+# options such as android_sparse
+Patch5: fastboot-use-custom-mke2fs.patch
 
 %description
 This package provides various tools for working with (and on) Android devices:
@@ -39,7 +44,7 @@ append2simg -- A tool to append to a sparse image
 make_ext4fs -- A tool to generate ext4 sparse images
 
 %prep
-%setup -qn platform -b 1 -b 2
+%setup -qn platform -b 1 -b 2 -b 3
 %apply_patches
 
 
@@ -123,18 +128,78 @@ pwd
 
 cd ../../core/adb
 for i in adb adb_auth_host adb_io adb_listeners adb_trace adb_utils fdevent sockets socket_spec sysdeps/errno transport transport_local transport_usb sysdeps_unix client/usb_dispatch client/usb_libusb client/usb_linux adb_client bugreport client/main console commandline diagnose_usb file_sync_client line_printer services shell_service_protocol transport_mdns_unsupported sysdeps/posix/network; do
-	%{__cxx} %{optflags} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -DADB_HOST=1 -D_GNU_SOURCE=1 -fvisibility=hidden -std=gnu++14 -I../base/include -I../include -I../libcrypto_utils/include -I. -DADB_VERSION=\"26.1.0-eng.bero.$(date +%Y%m%d.%H%M%S)\" -DADB_REVISION='"%{version}-%{release}"' -o $i.o -c $i.cpp
+	%{__cxx} %{optflags} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -DADB_HOST=1 -D_GNU_SOURCE=1 -fvisibility=hidden -std=gnu++14 -I../base/include -I../include -I../libcrypto_utils/include -I. -DADB_VERSION=\"26.1.0-eng.bero.$(date +%%Y%%m%%d.%%H%%M%%S)\" -DADB_REVISION='"%{version}-%{release}"' -o $i.o -c $i.cpp
 done
 %{__cxx} %{optflags} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -fvisibility=hidden -std=gnu++14 -o adb *.o client/*.o sysdeps/*.o sysdeps/*/*.o -lpthread $(pkg-config --libs libcrypto) ../base/libbase.a ../libcutils/libcutils.a $(pkg-config --libs libusb-1.0) ../libcrypto_utils/libcrypto_utils.a
 
 cd ../fastboot
 for i in bootimg_utils engine fastboot fs protocol socket tcp udp util usb_linux; do
-	%{__cxx} %{optflags} -std=gnu++14 -DFASTBOOT_VERSION=\"26.1.0-eng.bero.$(date +%Y%m%d.%H%M%S)\" -DFASTBOOT_REVISION='"%{version}-%{release}"' -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE -I../base/include -I../include -I../adb -I../libsparse/include -I../mkbootimg -I../../extras/ext4_utils/include -I../../extras/f2fs_utils -I../libziparchive/include -o $i.o -c $i.cpp
+	%{__cxx} %{optflags} -std=gnu++14 -DFASTBOOT_VERSION=\"26.1.0-eng.bero.$(date +%%Y%%m%%d.%%H%%M%%S)\" -DFASTBOOT_REVISION='"%{version}-%{release}"' -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE -I../base/include -I../include -I../adb -I../libsparse/include -I../mkbootimg -I../../extras/ext4_utils/include -I../../extras/f2fs_utils -I../libziparchive/include -o $i.o -c $i.cpp
 done
 %{__cxx} -std=gnu++14 %{optflags} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -fvisibility=hidden -o fastboot -lz -lpthread *.o ../adb/diagnose_usb.o ../../extras/ext4_utils/libext4_utils.a ../libcutils/libcutils.a ../libsparse/libsparse.a ../libziparchive/libziparchive.a ../base/libbase.a ../libutils/libutils.a ../liblog/liblog.a
 
+cd ../../../external/e2fsprogs/lib/ext2fs
+# Get rid of bits we don't need...
+rm -f bmove.c dosio.c irel_ma.c nt_io.c tst_*.c
+for i in *.c; do
+	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I. -I.. -I../../../../system/core/libsparse/include -o ${i/.c/.o} -c $i
+done
+ar cru libext2fs.a *.o
+ranlib libext2fs.a
+
+cd ../et
+for i in *.c; do
+	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I. -I.. -o ${i/.c/.o} -c $i
+done
+ar cru libcom_err.a *.o
+ranlib libcom_err.a
+
+cd ../e2p
+for i in *.c; do
+	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I. -I.. -o ${i/.c/.o} -c $i
+done
+ar cru libe2p.a *.o
+ranlib libe2p.a
+
+cd ../uuid
+rm -f gen_uuid_nt.c
+for i in *.c; do
+	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I. -I.. -o ${i/.c/.o} -c $i
+done
+ar cru libuuid.a *.o
+ranlib libuuid.a
+
+cd ../blkid
+for i in *.c; do
+	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I. -I.. -o ${i/.c/.o} -c $i
+done
+ar cru libblkid.a *.o
+ranlib libblkid.a
+
+cd ../support
+for i in *.c; do
+	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I. -I.. -o ${i/.c/.o} -c $i
+done
+ar cru libsupport.a *.o
+ranlib libsupport.a
+
+cd ../../misc
+# create_inode.c's copy_file_range isn't what unistd.h thinks it is
+sed -i -e 's,copy_file_range,e2_copy_file_range,g' create_inode.c
+for i in mke2fs util mk_hugefiles default_profile create_inode; do
+	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I../lib -I../lib/ext2fs -I../misc -o $i.o -c $i.c
+done
+%{__cxx} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -Iinclude -I../../core/include -I../../core/libsparse/include -o mke2fs *.o ../lib/ext2fs/*.o ../lib/et/libcom_err.a ../lib/support/libsupport.a ../lib/blkid/libblkid.a ../lib/e2p/libe2p.a ../lib/uuid/libuuid.a ../../../system/core/libsparse/libsparse.a ../../../system/core/libcutils/libcutils.a ../../../system/core/liblog/liblog.a ../../../system/core/base/libbase.a
+
+cd ../contrib/android
+cp ../../misc/create_inode.c .
+for i in e2fsdroid block_range create_inode fsmap block_list base_fs perms basefs_allocator hashmap; do
+	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I../../lib -I../../lib/ext2fs -I../../misc -I../../../../system/core/libcutils/include -I../../../../system/core/libsparse/include -o $i.o -c $i.c
+done
+%{__cxx} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -Iinclude -I../../core/include -I../../core/libsparse/include -o e2fsdroid *.o ../../lib/ext2fs/libext2fs.a ../../../../system/core/libsparse/libsparse.a ../../../../system/core/libcutils/libcutils.a ../../../../system/core/liblog/liblog.a ../../lib/et/libcom_err.a -lselinux ../../../../system/core/base/libbase.a
+
 pwd
-cd ../../../../abootimg
+cd ../../../../../abootimg
 make CFLAGS="%{optflags}" LDFLAGS="%{optflags}"
 
 %install
@@ -147,6 +212,9 @@ install -c -m755 system/extras/ext4_utils/make_ext4fs %{buildroot}%{_bindir}/
 
 install -c -m755 system/core/adb/adb %{buildroot}%{_bindir}/
 install -c -m755 system/core/fastboot/fastboot %{buildroot}%{_bindir}/
+
+install -c -m755 external/e2fsprogs/misc/mke2fs %{buildroot}%{_bindir}/mke2fsdroid
+install -c -m755 external/e2fsprogs/contrib/android/e2fsdroid %{buildroot}%{_bindir}/
 
 install -c -m755 ../abootimg/abootimg %{buildroot}%{_bindir}/
 install -c -m755 ../abootimg/abootimg-pack-initrd %{buildroot}%{_bindir}/

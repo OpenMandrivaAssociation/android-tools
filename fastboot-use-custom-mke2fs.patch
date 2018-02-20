@@ -1,0 +1,11 @@
+--- platform/system/core/fastboot/fs.cpp.omv~	2018-02-20 20:53:47.446510753 +0100
++++ platform/system/core/fastboot/fs.cpp	2018-02-20 20:54:01.499536983 +0100
+@@ -108,7 +108,7 @@ static int generate_ext4_image(const cha
+     static constexpr int block_size = 4096;
+     const std::string exec_dir = android::base::GetExecutableDirectory();
+ 
+-    const std::string mke2fs_path = exec_dir + "/mke2fs";
++    const std::string mke2fs_path = exec_dir + "/mke2fsdroid";
+     std::vector<const char*> mke2fs_args = {mke2fs_path.c_str(), "-t", "ext4", "-b"};
+ 
+     std::string block_size_str = std::to_string(block_size);
