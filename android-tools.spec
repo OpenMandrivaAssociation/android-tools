@@ -1,6 +1,6 @@
 Name: android-tools
 Epoch: 1
-Version: 8.1.0_r9
+Version: 8.1.0_r14
 Release: 1
 # https://android.googlesource.com/platform/system/core
 Source0: core-%{version}.tar.xz
@@ -9,7 +9,7 @@ Source1: extras-%{version}.tar.xz
 # Not officially supported, but very useful for working
 # with phones that don't have a full source tree release...
 # https://github.com/ggrandou/abootimg
-Source2: abootimg-20180131.tar.xz
+Source2: abootimg-20180220.tar.xz
 Source100: package-source.sh
 Summary: Tools for working with/on Android
 URL: http://android.googlesource.com/
