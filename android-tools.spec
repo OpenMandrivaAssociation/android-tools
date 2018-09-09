@@ -1,6 +1,9 @@
 Name: android-tools
 Epoch: 1
-Version: 8.1.0_r14
+# In 9.0, the mke2fs tool is gone. We can't
+# update past 8.1.0_r* until we stop relying
+# on that tool for Dragonboard and Nitrogen8M builds.
+Version: 8.1.0_r46
 Release: 1
 # https://android.googlesource.com/platform/system/core
 Source0: core-%{version}.tar.xz
@@ -12,6 +15,10 @@ Source2: e2fsprogs-%{version}.tar.xz
 # with phones that don't have a full source tree release...
 # https://github.com/ggrandou/abootimg
 Source3: abootimg-20180220.tar.xz
+# Useful for generating Android-style boot.img images containing
+# non-Android kernels
+# git://codeaurora.org/quic/kernel/skales
+Source4: skales-20180909.tar.xz
 Source100: package-source.sh
 Summary: Tools for working with/on Android
 URL: http://android.googlesource.com/
@@ -31,6 +38,7 @@ Patch4: make_ext4fs-add-keep-uids-option.patch
 # System mke2fs won't work because fastboot uses custom
 # options such as android_sparse
 Patch5: fastboot-use-custom-mke2fs.patch
+Patch6: adb-glibc-2.28.patch
 
 %description
 This package provides various tools for working with (and on) Android devices:
@@ -44,7 +52,7 @@ append2simg -- A tool to append to a sparse image
 make_ext4fs -- A tool to generate ext4 sparse images
 
 %prep
-%setup -qn platform -b 1 -b 2 -b 3
+%setup -qn platform -b 1 -b 2 -b 3 -b 4
 %apply_patches
 
 
@@ -77,7 +85,7 @@ done
 
 # We only need a small subset of libcutils -- the other files are "missing" intentionally
 cd ../libcutils
-for i in load_file socket_local_client_unix socket_network_client_unix socket_local_server_unix sockets_unix socket_inaddr_any_server_unix sockets threads fs_config canned_fs_config; do
+for i in load_file socket_local_client_unix socket_network_client_unix socket_local_server_unix sockets_unix socket_inaddr_any_server_unix sockets threads fs_config canned_fs_config android_get_control_file; do
 	if [ -e $i.c ]; then
 		%{__cc} -std=gnu11 %{optflags} -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -Dchar16_t=uint16_t -Iinclude -I../include -o $i.o -c $i.c
 	else
@@ -97,7 +105,7 @@ ranlib libutils.a
 
 # We only need a small subset of liblog -- the other files are "missing" intentionally
 cd ../liblog
-for i in log_event_write fake_log_device log_event_list logger_write config_write logger_lock fake_writer logger_name; do
+for i in log_event_write fake_log_device log_event_list logger_write config_write logger_lock fake_writer logger_name local_logger stderr_write logprint config_read; do
 	%{__cc} %{optflags} -std=gnu11 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -DLIBLOG_LOG_TAGS=1005 -DFAKE_LOG_DEVICE=1 -D_GNU_SOURCE -Iinclude -I../include -o $i.o -c $i.c
 done
 ar cru liblog.a *.o
@@ -140,7 +148,7 @@ done
 
 cd ../../../external/e2fsprogs/lib/ext2fs
 # Get rid of bits we don't need...
-rm -f bmove.c dosio.c irel_ma.c nt_io.c tst_*.c
+rm -f bmove.c dosio.c irel_ma.c nt_io.c tst_*.c gen_crc32ctable.c tdbtool.c
 for i in *.c; do
 	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I. -I.. -I../../../../system/core/libsparse/include -o ${i/.c/.o} -c $i
 done
@@ -189,14 +197,14 @@ sed -i -e 's,copy_file_range,e2_copy_file_range,g' create_inode.c
 for i in mke2fs util mk_hugefiles default_profile create_inode; do
 	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I../lib -I../lib/ext2fs -I../misc -o $i.o -c $i.c
 done
-%{__cxx} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -Iinclude -I../../core/include -I../../core/libsparse/include -o mke2fs *.o ../lib/ext2fs/*.o ../lib/et/libcom_err.a ../lib/support/libsupport.a ../lib/blkid/libblkid.a ../lib/e2p/libe2p.a ../lib/uuid/libuuid.a ../../../system/core/libsparse/libsparse.a ../../../system/core/libcutils/libcutils.a ../../../system/core/liblog/liblog.a ../../../system/core/base/libbase.a
+%{__cxx} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -Iinclude -I../../core/include -I../../core/libsparse/include -o mke2fs *.o ../lib/ext2fs/*.o ../lib/et/libcom_err.a ../lib/support/libsupport.a ../lib/blkid/libblkid.a ../lib/e2p/libe2p.a ../lib/uuid/libuuid.a ../../../system/core/libsparse/libsparse.a ../../../system/core/libcutils/libcutils.a ../../../system/core/liblog/liblog.a ../../../system/core/base/libbase.a -lz
 
 cd ../contrib/android
 cp ../../misc/create_inode.c .
 for i in e2fsdroid block_range create_inode fsmap block_list base_fs perms basefs_allocator hashmap; do
 	%{__cc} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -std=gnu11 -I../../lib -I../../lib/ext2fs -I../../misc -I../../../../system/core/libcutils/include -I../../../../system/core/libsparse/include -o $i.o -c $i.c
 done
-%{__cxx} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -Iinclude -I../../core/include -I../../core/libsparse/include -o e2fsdroid *.o ../../lib/ext2fs/libext2fs.a ../../../../system/core/libsparse/libsparse.a ../../../../system/core/libcutils/libcutils.a ../../../../system/core/liblog/liblog.a ../../lib/et/libcom_err.a -lselinux ../../../../system/core/base/libbase.a
+%{__cxx} %{optflags} -DANDROID -DHOST -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE=1 -D_LARGEFILE_SOURCE=1 -Iinclude -I../../core/include -I../../core/libsparse/include -o e2fsdroid *.o ../../lib/ext2fs/libext2fs.a ../../../../system/core/libsparse/libsparse.a ../../../../system/core/libcutils/libcutils.a ../../../../system/core/liblog/liblog.a ../../lib/et/libcom_err.a -lselinux ../../../../system/core/base/libbase.a -lz -lpthread
 
 pwd
 cd ../../../../../abootimg
@@ -219,6 +227,9 @@ install -c -m755 external/e2fsprogs/contrib/android/e2fsdroid %{buildroot}%{_bin
 install -c -m755 ../abootimg/abootimg %{buildroot}%{_bindir}/
 install -c -m755 ../abootimg/abootimg-pack-initrd %{buildroot}%{_bindir}/
 install -c -m755 ../abootimg/abootimg-unpack-initrd %{buildroot}%{_bindir}/
+
+install -c -m755 ../skales/dtbTool %{buildroot}%{_bindir}/
+install -c -m755 ../skales/mkbootimg %{buildroot}%{_bindir}/
 
 %files
 %{_bindir}/*

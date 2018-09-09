@@ -1,5 +1,6 @@
 sources:
   abootimg-20180220.tar.xz: 1f2935ea5a54221057b26ceb73195c68d9bdc288
-  core-8.1.0_r14.tar.xz: 49f7954de95a7851b128dd25244c9f02919ebcec
-  extras-8.1.0_r14.tar.xz: f2aa2df06d8050c647ac72d7f294161faad2dac7
-  e2fsprogs-8.1.0_r14.tar.xz: 1fce1e78c3c7fe06ad461f3f5b00ff010c977edf
+  core-8.1.0_r46.tar.xz: d51311bff67a92519f550c5d23968b44b29268bd
+  e2fsprogs-8.1.0_r46.tar.xz: 275cbff367c0bbc1ab495b1c763fdd8045aa9c01
+  extras-8.1.0_r46.tar.xz: fccd3cf9c98c274cc4ef0db0443350a44a94e6d2
+  skales-20180909.tar.xz: ecf2f48f86044bac74e0c3650baa0e0fa42a97cb
