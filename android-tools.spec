@@ -3,7 +3,7 @@ Epoch: 1
 # In 9.0, the mke2fs tool is gone. We can't
 # update past 8.1.0_r* until we stop relying
 # on that tool for Dragonboard and Nitrogen8M builds.
-Version: 8.1.0_r46
+Version: 8.1.0_r48
 Release: 1
 # https://android.googlesource.com/platform/system/core
 Source0: core-%{version}.tar.xz
@@ -14,7 +14,7 @@ Source2: e2fsprogs-%{version}.tar.xz
 # Not officially supported, but very useful for working
 # with phones that don't have a full source tree release...
 # https://github.com/ggrandou/abootimg
-Source3: abootimg-20180220.tar.xz
+Source3: abootimg-20181011.tar.xz
 # Useful for generating Android-style boot.img images containing
 # non-Android kernels
 # git://codeaurora.org/quic/kernel/skales
@@ -39,6 +39,8 @@ Patch4: make_ext4fs-add-keep-uids-option.patch
 # options such as android_sparse
 Patch5: fastboot-use-custom-mke2fs.patch
 Patch6: adb-glibc-2.28.patch
+# https://bugs.launchpad.net/ubuntu/+source/abootimg/+bug/1606633
+Patch7: https://launchpadlibrarian.net/275172896/0001-Fix-extraction-of-stage2-image.patch
 
 %description
 This package provides various tools for working with (and on) Android devices:
@@ -53,8 +55,8 @@ make_ext4fs -- A tool to generate ext4 sparse images
 
 %prep
 %setup -qn platform -b 1 -b 2 -b 3 -b 4
-%apply_patches
-
+cd ..
+%autopatch -p0
 
 %build
 cd system/core/libsparse
