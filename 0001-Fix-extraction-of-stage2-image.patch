@@ -1,0 +1,30 @@
+From db48bff56d3bf49f06e2584ce1474a976b580479 Mon Sep 17 00:00:00 2001
+From: Dmitry Artamonow <mad_soft@inbox.lv>
+Date: Tue, 26 Jul 2016 18:44:53 +0300
+Subject: [PATCH] Fix extraction of stage2 image
+
+Due to incorrect rounding stage2 image can be extracted
+starting from wrong offset (one block off). Fix it.
+---
+ abootimg.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git abootimg/abootimg.c abootimg/abootimg.c
+index a55c5c8..c954fb9 100644
+--- abootimg/abootimg.c
++++ abootimg/abootimg.c
+@@ -843,8 +843,9 @@ void extract_second(t_abootimg* img)
+   if (!ssize) // Second Stage not present
+     return;
+ 
+-  unsigned n = (rsize + ksize + psize - 1) / psize;
+-  unsigned soffset = (1+n)*psize;
++  unsigned n = (ksize + psize - 1) / psize;
++  unsigned m = (rsize + psize - 1) / psize;
++  unsigned soffset = (1+n+m)*psize;
+ 
+   printf ("extracting second stage image in %s\n", img->second_fname);
+ 
+-- 
+2.1.4
+

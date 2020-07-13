@@ -1,10 +1,10 @@
 Name: android-tools
 Epoch: 1
-# In 9.0, the mke2fs tool is gone. We can't
+# In 9.0, the make_ext4tfs tool is gone. We can't
 # update past 8.1.0_r* until we stop relying
 # on that tool for Dragonboard and Nitrogen8M builds.
 Version: 8.1.0_r48
-Release: 4
+Release: 5
 # https://android.googlesource.com/platform/system/core
 Source0: core-%{version}.tar.xz
 # https://android.googlesource.com/platform/system/extras
