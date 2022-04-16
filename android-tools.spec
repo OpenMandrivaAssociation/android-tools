@@ -53,7 +53,9 @@ make_ext4fs -- A tool to generate ext4 sparse images
 %autosetup -p1 -a 1
 tar xf %{S:2}
 
-%cmake -G Ninja
+%cmake -G Ninja \
+	-DBUILD_SHARED_LIBS:BOOL=OFF \
+	-DBUILD_STATIC_LIBS:BOOL=ON
 
 %build
 %ninja_build -C build
