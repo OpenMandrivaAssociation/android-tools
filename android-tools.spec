@@ -30,6 +30,9 @@ BuildRequires: pkgconfig(libusb-1.0)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(libcrypto)
 BuildRequires: pkgconfig(blkid)
+BuildRequires: pkgconfig(openssl)
+BuildRequires: systemd
+BuildRequires: pkgconfig(libsystemd)
 BuildRequires: selinux-static-devel
 BuildRequires: gtest-devel
 BuildRequires: golang perl
