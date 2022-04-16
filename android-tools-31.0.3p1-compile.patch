@@ -1,0 +1,11 @@
+diff -up android-tools-31.0.3p1/vendor/adb/tls/include/adb/tls/tls_connection.h.omv~ android-tools-31.0.3p1/vendor/adb/tls/include/adb/tls/tls_connection.h
+--- android-tools-31.0.3p1/vendor/adb/tls/include/adb/tls/tls_connection.h.omv~	2022-04-16 14:14:04.092021517 +0200
++++ android-tools-31.0.3p1/vendor/adb/tls/include/adb/tls/tls_connection.h	2022-04-16 14:14:13.449064762 +0200
+@@ -21,6 +21,7 @@
+ 
+ #include <string_view>
+ #include <vector>
++#include <functional>
+ 
+ #include <android-base/unique_fd.h>
+ #include <openssl/ssl.h>

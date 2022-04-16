@@ -9,10 +9,10 @@ starting from wrong offset (one block off). Fix it.
  abootimg.c | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git abootimg/abootimg.c abootimg/abootimg.c
+diff --git a/abootimg/abootimg.c b/abootimg/abootimg.c
 index a55c5c8..c954fb9 100644
---- abootimg/abootimg.c
-+++ abootimg/abootimg.c
+--- a/abootimg/abootimg.c
++++ b/abootimg/abootimg.c
 @@ -843,8 +843,9 @@ void extract_second(t_abootimg* img)
    if (!ssize) // Second Stage not present
      return;

@@ -17,6 +17,7 @@ Source2: skales-20180909.tar.xz
 Source3: https://src.fedoraproject.org/rpms/android-tools/raw/rawhide/f/51-android.rules
 Source4: https://src.fedoraproject.org/rpms/android-tools/raw/rawhide/f/adb.service
 Patch0: 0001-Fix-extraction-of-stage2-image.patch
+Patch1: android-tools-31.0.3p1-compile.patch
 Summary: Tools for working with/on Android
 URL: http://android.googlesource.com/
 License: Apache 2.0
@@ -30,7 +31,6 @@ BuildRequires: pkgconfig(libusb-1.0)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(libcrypto)
 BuildRequires: pkgconfig(blkid)
-BuildRequires: pkgconfig(openssl)
 BuildRequires: systemd
 BuildRequires: pkgconfig(libsystemd)
 BuildRequires: selinux-static-devel
@@ -50,8 +50,9 @@ append2simg -- A tool to append to a sparse image
 make_ext4fs -- A tool to generate ext4 sparse images
 
 %prep
-%autosetup -p0 -a 1
+%autosetup -p1 -a 1
 tar xf %{S:2}
+
 %cmake -G Ninja
 
 %build
