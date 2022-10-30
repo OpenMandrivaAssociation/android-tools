@@ -2,8 +2,8 @@ Name: android-tools
 # In 9.0, the make_ext4tfs tool is gone. We can't
 # update past 8.1.0_r* until we stop relying
 # on that tool for Dragonboard and Nitrogen8M builds.
-Version: 31.0.3p1
-Release: 4
+Version: 33.0.3
+Release: 1
 # https://android.googlesource.com/platform/system/core
 Source0: https://github.com/nmeum/android-tools/releases/download/%{version}/android-tools-%{version}.tar.xz
 # Not officially supported, but very useful for working
@@ -17,7 +17,6 @@ Source2: skales-20180909.tar.xz
 Source3: https://src.fedoraproject.org/rpms/android-tools/raw/rawhide/f/51-android.rules
 Source4: https://src.fedoraproject.org/rpms/android-tools/raw/rawhide/f/adb.service
 Patch0: 0001-Fix-extraction-of-stage2-image.patch
-Patch1: android-tools-31.0.3p1-compile.patch
 Summary: Tools for working with/on Android
 URL: http://android.googlesource.com/
 License: Apache 2.0
