@@ -1,0 +1,51 @@
+diff -up android-tools-34.0.0/CMakeLists.txt.omv~ android-tools-34.0.0/CMakeLists.txt
+diff -up android-tools-34.0.0/vendor/CMakeLists.adb.txt.omv~ android-tools-34.0.0/vendor/CMakeLists.adb.txt
+--- android-tools-34.0.0/vendor/CMakeLists.adb.txt.omv~	2023-03-09 00:26:14.179426077 +0100
++++ android-tools-34.0.0/vendor/CMakeLists.adb.txt	2023-03-09 00:36:01.399327419 +0100
+@@ -192,6 +192,7 @@ target_link_libraries(adb
+ 	crypto
+ 	ssl
+ 	${PROTOBUF_LIBRARIES}
++	-labsl_log_internal_check_op -labsl_log_internal_message -labsl_spinlock_wait
+ 	PkgConfig::libbrotlicommon
+ 	PkgConfig::libbrotlidec
+ 	PkgConfig::libbrotlienc
+diff -up android-tools-34.0.0/vendor/CMakeLists.partition.txt.omv~ android-tools-34.0.0/vendor/CMakeLists.partition.txt
+--- android-tools-34.0.0/vendor/CMakeLists.partition.txt.omv~	2023-03-09 00:31:48.850243118 +0100
++++ android-tools-34.0.0/vendor/CMakeLists.partition.txt	2023-03-09 00:33:56.050296134 +0100
+@@ -28,7 +28,7 @@ add_library(liblpdump STATIC
+ 	${DYNAMIC_PARTITIONS_DEVICE_INFO_PROTO_SRCS} ${DYNAMIC_PARTITIONS_DEVICE_INFO_PROTO_HDRS}
+ 	extras/partition_tools/lpdump.cc)
+ target_link_libraries(liblpdump PRIVATE
+-	libbase libjsonpbparse liblp ${PROTOBUF_LIBRARIES})
++	libbase libjsonpbparse liblp ${PROTOBUF_LIBRARIES} -labsl_log_internal_check_op -labsl_log_internal_message -labsl_status)
+ 
+ add_executable(lpdump
+ 	extras/partition_tools/lpdump_host.cc)
+diff -up android-tools-34.0.0/vendor/extras/libjsonpb/parse/jsonpb.cpp.omv~ android-tools-34.0.0/vendor/extras/libjsonpb/parse/jsonpb.cpp
+--- android-tools-34.0.0/vendor/extras/libjsonpb/parse/jsonpb.cpp.omv~	2023-03-09 00:19:26.870833293 +0100
++++ android-tools-34.0.0/vendor/extras/libjsonpb/parse/jsonpb.cpp	2023-03-09 00:30:58.112820871 +0100
+@@ -50,8 +50,10 @@ ErrorOr<std::string> MessageToJsonString
+   if (!status.ok()) {
+ #if GOOGLE_PROTOBUF_VERSION < 3016000
+     return MakeError<std::string>(status.error_message().as_string());
+-#else
++#elif GOOGLE_PROTOBUF_VERSION < 4022000
+     return MakeError<std::string>(status.message().as_string());
++#else
++    return MakeError<std::string>(status.message().data());
+ #endif
+   }
+   return ErrorOr<std::string>(std::move(json));
+@@ -67,8 +69,10 @@ ErrorOr<std::monostate> JsonStringToMess
+   if (!status.ok()) {
+ #if GOOGLE_PROTOBUF_VERSION < 3016000
+     return MakeError<std::monostate>(status.error_message().as_string());
+-#else
++#elif GOOGLE_PROTOBUF_VERSION < 4022000
+     return MakeError<std::monostate>(status.message().as_string());
++#else
++    return MakeError<std::monostate>(status.message().data());
+ #endif
+   }
+   if (!message->ParseFromString(binary)) {
