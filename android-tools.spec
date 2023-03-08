@@ -23,6 +23,7 @@ URL: http://android.googlesource.com/
 License: Apache 2.0
 Group: Development/Tools
 BuildRequires: pkgconfig(protobuf)
+BuildRequires: cmake(absl)
 BuildRequires: pkgconfig(libbrotlidec)
 BuildRequires: pkgconfig(libbrotlienc)
 BuildRequires: pkgconfig(libzstd)
