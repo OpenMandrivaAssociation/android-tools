@@ -2,8 +2,8 @@ Name: android-tools
 # In 9.0, the make_ext4tfs tool is gone. We can't
 # update past 8.1.0_r* until we stop relying
 # on that tool for Dragonboard and Nitrogen8M builds.
-Version: 34.0.0
-Release: 5
+Version: 34.0.1
+Release: 1
 # https://android.googlesource.com/platform/system/core
 Source0: https://github.com/nmeum/android-tools/releases/download/%{version}/android-tools-%{version}.tar.xz
 # Not officially supported, but very useful for working
