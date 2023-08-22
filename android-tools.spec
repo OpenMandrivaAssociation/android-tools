@@ -16,6 +16,7 @@ Source1: abootimg-20181011.tar.xz
 Source2: skales-20180909.tar.xz
 Source3: https://src.fedoraproject.org/rpms/android-tools/raw/rawhide/f/51-android.rules
 Source4: https://src.fedoraproject.org/rpms/android-tools/raw/rawhide/f/adb.service
+Source5: godeps-for-android-tools.tar.xz
 Patch0: 0001-Fix-extraction-of-stage2-image.patch
 Patch1: android-tools-34-protobuf-22.1.patch
 Summary: Tools for working with/on Android
@@ -53,12 +54,14 @@ make_ext4fs -- A tool to generate ext4 sparse images
 %prep
 %autosetup -p1 -a 1
 tar xf %{S:2}
+tar xf %{S:5}
 
 %cmake -G Ninja \
 	-DBUILD_SHARED_LIBS:BOOL=OFF \
 	-DBUILD_STATIC_LIBS:BOOL=ON
 
 %build
+export GOPATH=$(pwd)/.godeps
 %ninja_build -C build
 cd abootimg
 make CFLAGS="%{optflags}"
