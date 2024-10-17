@@ -20,7 +20,7 @@ Source5: godeps-for-android-tools.tar.xz
 Patch0: 0001-Fix-extraction-of-stage2-image.patch
 #Patch1: android-tools-34-protobuf-22.1.patch
 Summary: Tools for working with/on Android
-URL: http://android.googlesource.com/
+URL: https://android.googlesource.com/
 License: Apache 2.0
 Group: Development/Tools
 BuildRequires: pkgconfig(protobuf)
