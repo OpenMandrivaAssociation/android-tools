@@ -25,6 +25,7 @@ License: Apache 2.0
 Group: Development/Tools
 BuildRequires: pkgconfig(protobuf)
 BuildRequires: cmake(absl)
+BuildRequires: cmake(fmt)
 BuildRequires: pkgconfig(libbrotlidec)
 BuildRequires: pkgconfig(libbrotlienc)
 BuildRequires: pkgconfig(libzstd)
@@ -35,6 +36,7 @@ BuildRequires: pkgconfig(libcrypto)
 BuildRequires: pkgconfig(blkid)
 BuildRequires: systemd
 BuildRequires: pkgconfig(libsystemd)
+BuildRequires: pkgconfig(libunwind-generic)
 BuildRequires: selinux-static-devel
 BuildRequires: gtest-devel
 BuildRequires: golang perl
