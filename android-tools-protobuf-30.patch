@@ -1,0 +1,12 @@
+diff -up android-tools-35.0.2/vendor/extras/libjsonpb/parse/jsonpb.cpp.omv~ android-tools-35.0.2/vendor/extras/libjsonpb/parse/jsonpb.cpp
+--- android-tools-35.0.2/vendor/extras/libjsonpb/parse/jsonpb.cpp.omv~	2025-03-19 22:18:17.377021461 +0100
++++ android-tools-35.0.2/vendor/extras/libjsonpb/parse/jsonpb.cpp	2025-03-19 22:18:27.340583824 +0100
+@@ -33,7 +33,7 @@ using google::protobuf::util::TypeResolv
+ static constexpr char kTypeUrlPrefix[] = "type.googleapis.com";
+ 
+ std::string GetTypeUrl(const Message& message) {
+-  return std::string(kTypeUrlPrefix) + "/" + message.GetDescriptor()->full_name();
++  return std::string(kTypeUrlPrefix) + "/" + std::string(message.GetDescriptor()->full_name());
+ }
+ 
+ ErrorOr<std::string> MessageToJsonString(const Message& message) {

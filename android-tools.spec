@@ -18,6 +18,7 @@ Source3: https://src.fedoraproject.org/rpms/android-tools/raw/rawhide/f/51-andro
 Source4: https://src.fedoraproject.org/rpms/android-tools/raw/rawhide/f/adb.service
 Source5: godeps-for-android-tools.tar.xz
 Patch0: 0001-Fix-extraction-of-stage2-image.patch
+Patch1: android-tools-protobuf-30.patch
 #Patch1: android-tools-34-protobuf-22.1.patch
 Summary: Tools for working with/on Android
 URL: https://android.googlesource.com/
