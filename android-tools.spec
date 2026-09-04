@@ -58,6 +58,8 @@ make_ext4fs -- A tool to generate ext4 sparse images
 %autosetup -p1 -a 1
 tar xf %{S:2}
 tar xf %{S:5}
+# clang 23 no longer sees uint8_t via transitive headers
+grep -q cstdint vendor/libbase/hex.cpp || sed -i '1i#include <cstdint>' vendor/libbase/hex.cpp
 
 %cmake -G Ninja \
 	-DBUILD_SHARED_LIBS:BOOL=OFF \
