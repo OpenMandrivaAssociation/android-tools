@@ -60,6 +60,7 @@ tar xf %{S:2}
 tar xf %{S:5}
 # clang 23 no longer sees uint8_t via transitive headers
 grep -q cstdint vendor/libbase/hex.cpp || sed -i '1i#include <cstdint>' vendor/libbase/hex.cpp
+export CXXFLAGS="${CXXFLAGS:-%{optflags}} -include cstdint"
 
 %cmake -G Ninja \
 	-DBUILD_SHARED_LIBS:BOOL=OFF \
