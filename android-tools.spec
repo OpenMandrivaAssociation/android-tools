@@ -41,7 +41,7 @@ BuildRequires: pkgconfig(libunwind-generic)
 BuildRequires: selinux-static-devel
 BuildRequires: gtest-devel
 BuildRequires: golang perl
-BuildRequires: cmake ninja
+BuildRequires: cmake ninja make
 
 %description
 This package provides various tools for working with (and on) Android devices:
