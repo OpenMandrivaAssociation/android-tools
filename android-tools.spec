@@ -58,9 +58,12 @@ make_ext4fs -- A tool to generate ext4 sparse images
 %autosetup -p1 -a 1
 tar xf %{S:2}
 tar xf %{S:5}
-# clang 23 no longer sees uint8_t via transitive headers
+# clang 23 no longer sees uint8_t via transitive headers.
+# Do not use -include cstdint globally: that pulls _GNU_SOURCE before
+# posix_strerror_r.cpp can #undef it, so GNU strerror_r (char *) wins.
 grep -q cstdint vendor/libbase/hex.cpp || sed -i '1i#include <cstdint>' vendor/libbase/hex.cpp
-export CXXFLAGS="${CXXFLAGS:-%{optflags}} -include cstdint"
+grep -q cstdint vendor/libziparchive/include/ziparchive/zip_writer.h || \
+	sed -i '1i#include <cstdint>' vendor/libziparchive/include/ziparchive/zip_writer.h
 
 %cmake -G Ninja \
 	-DBUILD_SHARED_LIBS:BOOL=OFF \
